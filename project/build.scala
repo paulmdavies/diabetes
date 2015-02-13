@@ -11,7 +11,8 @@ object DiabetesBuild extends Build
             libraryDependencies ++= Seq(
                 "org.scalatest" %% "scalatest" % "2.2.1" % "test",
                 "org.scalacheck" %% "scalacheck" % "1.12.1" % "test",
-                "org.scalafx" %% "scalafx" % "8.0.0-R4"
+                "org.scalafx" %% "scalafx" % "8.0.0-R4",
+                "joda-time" % "joda-time" % "2.7"
             )
         )
     )
