@@ -4,42 +4,34 @@ import org.joda.time._
 import scalafx.scene.layout.GridPane
 import scalafx.scene.control._
 import scalafx.Includes._
+import com.paulmdavies.scalafx.ValidationTextField
 
 class BloodSugarEntryPane( private [frontend] val callback : ( DateTime, Double ) => Unit ) extends GridPane
 {
-    //private [frontend] val datePicker = new DatePicker
-    
     val submitButton = new Button( "Submit" ) {
         onMouseClicked = handle( { 
             submit()
         } )
     }
     
-	val bloodSugarField = new TextField()
+	val bloodSugarField = new ValidationTextField( ( good : Boolean ) => submitButton.disable = !good )
     {
-        def apply() : Double =
-        {
-            this.text.value.toDouble
-        }
+        def apply() : Double = this.text.value.toDouble
         
-        onKeyReleased = handle {
-            println( "Typed" )
-            val value = this.text.value
-            try 
+        def validate() : Boolean =
+        {
+            try
             {
-                value.toDouble
-                println( "Good Value: %s".format( value ) )
-                submitButton.disable = false
+                this.text.value.toDouble
+                true
             }
             catch
             {
-                case e : NumberFormatException => 
-                {
-                    println( "Bad Value: %s".format( value ) )
-                    submitButton.disable = true 
-                }
+                case e : NumberFormatException => false
             }
         }
+        
+        
     }
     
     this.add( new Label( "Blood Sugar Reading" ), 0, 0 )
@@ -50,7 +42,6 @@ class BloodSugarEntryPane( private [frontend] val callback : ( DateTime, Double 
         gp
     }, 0, 1 )
     this.add( submitButton, 0, 2 )
-    //this.add( datePicker, 0, 1 )
     
     private [frontend] def submit() : Unit =
     {
